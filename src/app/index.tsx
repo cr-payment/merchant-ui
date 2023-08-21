@@ -23,6 +23,8 @@ import { GlobalStyle } from 'styles/global-styles';
 import { polygonMumbai } from 'wagmi/chains';
 import { WagmiConfig, configureChains, createConfig, mainnet } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import {CrPayment} from 'crpayment-sdk';
+import { create } from 'domain';
 
 const apiKey = process.env.REACT_APP_ALCHEMY_APIKEY!;
 
@@ -50,8 +52,29 @@ const theme = createTheme({
     ].join(','),
   },
 });
+
+const crPayment = new CrPayment({
+  api_keys: {
+      public_api_key: 'string',
+      private_api_key: 'string'
+  },
+  network: 'testnet'
+});
+const createSession = async () => {
+  // Step 2: create session payment by calling this function
+  const session = await crPayment.session.create({
+      itemId: '1',
+      amount: '1'
+  });
+
+  console.log("session", session);
+  return session;
+}
+
 export function App() {
   const { i18n } = useTranslation();
+  // console.log(crPayment.session)
+  createSession();
 
   return (
     <WagmiConfig config={config}>

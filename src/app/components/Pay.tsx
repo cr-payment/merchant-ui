@@ -23,6 +23,7 @@ const Pay = ({ billInfo }) => {
   return (
     <div>
       <Typography variant="h5">Supported chains</Typography>
+      {/* TODO merchant list wallet api here  */}
       <Button onClick={handleOpenChooseToken}>Choose token to pay</Button>
       {openChooseToken && <ChooseToken />}
       {openChooseToken && (
