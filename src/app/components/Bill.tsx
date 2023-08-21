@@ -52,15 +52,15 @@ export default function Bill() {
 
   return (
     <div>
-      <Grid container spacing={5}>
+      <Grid container spacing={10}>
         <Grid item xs={6}>
           <Typography variant="h5">Pay to {billInfo?.shopName}</Typography>
           <Typography variant="h3">${billInfo?.total}</Typography>
           <Typography variant="h6">Cart</Typography>
           <Cart billInfo={billInfo} />
         </Grid>
-        <Grid item xs={6}>
-          <Typography variant="h6">Billing Information</Typography>
+        <Grid item xs={6} >
+          <Typography variant="h5">Billing Information</Typography>
           <InfoLine label="Name" value={billInfo?.name} />
           <InfoLine label="Email" value={billInfo?.email} />
           <InfoLine label="Number" value={billInfo?.number} />

@@ -20,6 +20,21 @@ import {
   styled,
 } from '@mui/material';
 import { GlobalStyle } from 'styles/global-styles';
+import { polygonMumbai } from 'wagmi/chains';
+import { WagmiConfig, configureChains, createConfig, mainnet } from 'wagmi';
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+
+const apiKey = process.env.REACT_APP_ALCHEMY_APIKEY!;
+
+const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [polygonMumbai],
+  [alchemyProvider({ apiKey: apiKey })],
+);
+const config = createConfig({
+  autoConnect: true,
+  publicClient,
+  webSocketPublicClient,
+});
 
 const theme = createTheme({
   typography: {
@@ -39,20 +54,22 @@ export function App() {
   const { i18n } = useTranslation();
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <Box
-        sx={{
-          height: 100,
-        }}
-      />
-      <Grid container spacing={8}>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={10}>
-          <Bill />
+    <WagmiConfig config={config}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Box
+          sx={{
+            height: 100,
+          }}
+        />
+        <Grid container spacing={8}>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={10}>
+            <Bill />
+          </Grid>
+          <Grid item xs={1}></Grid>
         </Grid>
-        <Grid item xs={1}></Grid>
-      </Grid>
-    </ThemeProvider>
+      </ThemeProvider>
+    </WagmiConfig>
   );
 }
