@@ -25,7 +25,7 @@ const Cart = ({ billInfo }) => {
       {billInfo?.cart.map((bill: { name: string; price: number }, index) => (
         <InfoLine key={index} label={bill.name} value={bill.price} />
       ))}
-      <Box flexGrow={15} borderBottom="1px solid #ccc" mx={2} my={4}></Box>
+      <Box flexGrow={15} borderBottom="1px solid #ccc" my={4}></Box>
 
       <InfoLine label="Shipping" value={billInfo?.shipping} />
       <InfoLine label="Total" value={billInfo?.total} />
@@ -64,7 +64,7 @@ export default function Bill() {
           <InfoLine label="Name" value={billInfo?.name} />
           <InfoLine label="Email" value={billInfo?.email} />
           <InfoLine label="Number" value={billInfo?.number} />
-          <Box flexGrow={15} borderBottom="1px solid #ccc" mx={2} my={4}></Box>
+          <Box flexGrow={15} borderBottom="1px solid #ccc" my={4}></Box>
           <Pay billInfo={billInfo} />
         </Grid>
       </Grid>
