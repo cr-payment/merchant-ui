@@ -16,7 +16,7 @@ import FontFaceObserver from 'fontfaceobserver';
 // Use consistent styling
 import 'sanitize.css/sanitize.css';
 
-import { App } from 'app';
+import { App } from 'app/App';
 
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -44,7 +44,6 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  
   <Provider store={store}>
     <ThemeProvider>
       <HelmetProvider>

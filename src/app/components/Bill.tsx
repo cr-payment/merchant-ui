@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { useBillSlice } from '../slice';
-import { selectBill, selectBillData } from '../slice/selectors';
+import { useBillSlice } from '../billSlice';
+import { selectBill, selectBillData } from '../billSlice/selectors';
 import { useSelector } from 'react-redux';
 
 import { Typography, Box, Grid } from '@mui/material';
@@ -59,7 +59,7 @@ export default function Bill() {
           <Typography variant="h6">Cart</Typography>
           <Cart billInfo={billInfo} />
         </Grid>
-        <Grid item xs={6} >
+        <Grid item xs={6}>
           <Typography variant="h5">Billing Information</Typography>
           <InfoLine label="Name" value={billInfo?.name} />
           <InfoLine label="Email" value={billInfo?.email} />

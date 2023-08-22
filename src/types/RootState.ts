@@ -1,5 +1,4 @@
-import { GithubRepoFormState } from 'app/pages/HomePage/Features/GithubRepoForm/slice/types';
-import { BillState } from 'app/slice/types';
+import { BillState } from 'app/billSlice/types';
 import { ThemeState } from 'styles/theme/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
@@ -11,7 +10,6 @@ import { ThemeState } from 'styles/theme/slice/types';
 */
 export interface RootState {
   theme?: ThemeState;
-  githubRepoForm?: GithubRepoFormState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
   bill?: BillState;
 }
