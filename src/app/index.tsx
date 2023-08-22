@@ -23,7 +23,7 @@ import { GlobalStyle } from 'styles/global-styles';
 import { polygonMumbai } from 'wagmi/chains';
 import { WagmiConfig, configureChains, createConfig, mainnet } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { CrPayment } from 'sdk/dist';
+import {CrPayment} from "../sdk";
 
 const apiKey = process.env.REACT_APP_ALCHEMY_APIKEY!;
 
