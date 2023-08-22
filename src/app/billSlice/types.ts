@@ -3,7 +3,7 @@ export interface Merch {
   name: string;
   price: number;
   quantity: number;
-  description: string;
+  img: string;
 }
 
 export interface BillState {
@@ -13,15 +13,15 @@ export interface BillState {
 }
 
 export interface BillData {
-  name: string;
-  email: string;
-  number: string;
-  shopId: string;
-  shopName: string;
+  name?: string;
+  email?: string;
+  number?: string;
+  shopId?: string;
+  shopName?: string;
   cart: Merch[];
   shipping: number;
   total: number;
-  paidIn: number;
-  token: string;
-  transactionHash: string;
+  paidIn?: number;
+  token?: string;
+  // transactionHash: string;
 }

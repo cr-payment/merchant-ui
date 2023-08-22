@@ -16,25 +16,13 @@ export const initialState: BillState = {
     shopId: '123',
     shopName: 'MyShop',
     cart: [
-      {
-        name: 'chong chong tre',
-        price: 123,
-        quantity: 2,
-        description: 'this is a description',
-      },
-      {
-        name: 'den pin thu nho',
-        price: 456,
-        quantity: 1,
-        description: 'this is a description',
-      },
     ],
 
-    shipping: 11,
-    total: 1234,
+    shipping: 0,
+    total: 0,
     paidIn: 0,
     token: 'USDT',
-    transactionHash: '0x1900100ce',
+    // transactionHash: '0x1900100ce',
   },
   error: false,
 };

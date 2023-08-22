@@ -8,7 +8,6 @@
 
 import * as React from 'react';
 
-import { useTranslation } from 'react-i18next';
 import Bill from './components/Bill';
 import {
   Box,
@@ -16,8 +15,6 @@ import {
   Grid,
   ThemeProvider,
   createTheme,
-  makeStyles,
-  styled,
 } from '@mui/material';
 import { GlobalStyle } from 'styles/global-styles';
 import { polygonMumbai } from 'wagmi/chains';
@@ -25,6 +22,9 @@ import { WagmiConfig, configureChains, createConfig, mainnet } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { CrPayment } from '../sdk';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useBillSlice } from './billSlice';
+import { selectBillData } from './billSlice/selectors';
 
 const apiKey = process.env.REACT_APP_ALCHEMY_APIKEY!;
 
@@ -53,12 +53,10 @@ const theme = createTheme({
   },
 });
 
-// const MyButton = (props) => (
-//   <Button sx={{ backgroundColor: props.myCustomColor }}>{props.text}</Button>
-// );
-
 export function App() {
-  const { i18n } = useTranslation();
+  const dispatch = useDispatch()
+  const { actions } = useBillSlice();
+  const billInfo = useSelector(selectBillData);
 
   useEffect(() => {
     // Function to get the value of a query parameter from the URL
@@ -69,11 +67,26 @@ export function App() {
 
     // Read the 'param' query parameter from the URL
     const sessId = getQueryParam('session_id');
+    const jsonDataURI= getQueryParam('json_data');
+    console.log(jsonDataURI)
+    const jsonData = JSON.parse(decodeURIComponent(jsonDataURI!));
+    console.log(jsonData)
+    const shipping = getQueryParam('shipping')!;
+    const total = getQueryParam('total')!;
 
     if (sessId) {
-      // Set the value in the 'param' key in localStorage
+      dispatch(actions.billRequestSuccess(
+        {
+          ...billInfo,
+          cart: jsonData,
+          shipping: parseFloat(shipping),
+          total: parseFloat(total)
+        }
+      ))
+
       localStorage.setItem('session_id ', sessId);
-      // dispatch action get sessionId
+      console.log(jsonData);
+
       console.log(`Stored value '${sessId}' in localStorage.`);
     } else {
       console.log("No 'session_id' query parameter found in the URL.");
