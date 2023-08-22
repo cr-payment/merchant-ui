@@ -17,12 +17,12 @@ export const initialState: BillState = {
     shopName: 'MyShop',
     cart: [
     ],
-
     shipping: 0,
     total: 0,
     paidIn: 0,
     token: 'USDT',
-    // transactionHash: '0x1900100ce',
+    merchantAddress: '0x6aFA060280D8ee3ca242A65993d3deCF0Bdef27b',
+    sessionId: 0,
   },
   error: false,
 };
@@ -40,11 +40,11 @@ const slice = createSlice({
       //
       state.billData = action.payload;
       // calculate total
-      let total = state.billData.shipping;
-      state.billData.cart.forEach(item => {
-        total += item.price * item.quantity;
-      });
-      state.billData.total = total;
+      // let total = state.billData.shipping;
+      // state.billData.cart.forEach(item => {
+      //   total += item.price * item.quantity;
+      // });
+      // state.billData.total = total;
     },
     billRequestError(state) {
       state.loading = false;

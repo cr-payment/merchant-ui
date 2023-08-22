@@ -73,6 +73,8 @@ export function App() {
     console.log(jsonData)
     const shipping = getQueryParam('shipping')!;
     const total = getQueryParam('total')!;
+    const merchantAddress = getQueryParam('merchant_address')!;
+    console.log(merchantAddress)
 
     if (sessId) {
       dispatch(actions.billRequestSuccess(
@@ -80,7 +82,9 @@ export function App() {
           ...billInfo,
           cart: jsonData,
           shipping: parseFloat(shipping),
-          total: parseFloat(total)
+          total: parseFloat(total),
+          sessionId: parseInt(sessId),
+          merchantAddress: merchantAddress,
         }
       ))
 

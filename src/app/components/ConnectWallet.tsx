@@ -1,7 +1,10 @@
 import { Box, Typography } from '@mui/material';
-import { useAccount, useConnect, useContractWrite, useEnsName } from 'wagmi';
+import { useAccount, useConnect, useContractRead, useContractWrite, useEnsName, usePrepareContractWrite } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import contractABI from './contractABI.json';
+import { useBillSlice } from 'app/billSlice';
+import { useSelector } from 'react-redux';
+import { selectBillData } from 'app/billSlice/selectors';
 
 function Profile() {
   const { address, isConnected } = useAccount();
@@ -15,25 +18,37 @@ function Profile() {
 }
 
 const ConnectWallet = () => {
+  const { actions } = useBillSlice();
+  const billInfo = useSelector(selectBillData);
+//   const abi = contractABI as const // <--- const assertion
+// const { data } = useContractRead({ abi })
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
-    address: '0x50209FE5c038724CF37B12CF6f51Da68a1fD5221',
+const sessionId = billInfo!.sessionId;
+const merchantAddress = billInfo!.merchantAddress;
+const token = `0x${process.env.REACT_APP_TOKEN!}`;
+const total = billInfo!.total;
+const totalRounded= Math.round(total);
+
+  const { config } = usePrepareContractWrite({
+        address: `0x${process.env.REACT_APP_CONTRACT_ADDRESS!}`,
     abi: contractABI as any[],
     functionName: 'pay',
     args: [
-      331692469592739300,
-      '0x6aFA060280D8ee3ca242A65993d3deCF0Bdef27b',
-      '0xA19e972b3a4d706236e7F25709291Ba79EBD460C',
-      1,
+      sessionId,
+      merchantAddress,
+      `0x${process.env.REACT_APP_TOKEN!}`,
+      totalRounded,
     ],
-  });
+  })
+  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+
 
   return (
     <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}>
       <Typography variant="h4">Connect your wallet</Typography>
       <Profile />
       <div>
-        <button onClick={() => write()}>Feed</button>
+        <button onClick={() => write?.()}>Feed</button>
         {isLoading && <div>Check Wallet</div>}
         {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
       </div>

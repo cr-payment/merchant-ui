@@ -23,5 +23,7 @@ export interface BillData {
   total: number;
   paidIn?: number;
   token?: string;
+  sessionId: number;
+  merchantAddress: string;
   // transactionHash: string;
 }
