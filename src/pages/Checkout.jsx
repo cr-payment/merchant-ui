@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { CrPayment } from "../sdk";
 import store from "redux/store";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 const Checkout = () => {
   const state = useSelector((state) => state.handleCart);
@@ -14,17 +16,52 @@ const Checkout = () => {
     },
     network: "testnet",
   });
+  let session;
 
-  const createSession = async () => {
-    // Step 2: create session payment by calling this function
-    const session = await crPayment.session.create({
-      itemId: "1",
-      amount: "1",
+  const getSession = async (sessionId) => {
+    console.log("sessionId", sessionId);
+    // Step 3: get session payment by calling this function
+    const session = await crPayment.session.getPaymentState({
+      session_id: sessionId,
     });
 
     console.log("session", session);
     return session;
   };
+
+  // useEffect(() => {
+  //   if (session.data.id) dispatch(getSession(session.data.id)); // Start the data fetching loop
+  // }, [dispatch]);
+  let x=0
+  useEffect(() => {
+    const fetchDataInterval = setInterval(async () => {
+      if (x!= 0) {
+        const paymentStatus = await getSession(x);
+        console.log(paymentStatus.data.status)
+        if(paymentStatus.data.status=="success"){
+          alert("Payment Successfull")
+          clearInterval(fetchDataInterval);
+        }
+        // console.log(paymentStatus.data.data);
+      }
+    }, 3000); 
+    return () => {
+      clearInterval(fetchDataInterval);
+    };
+  }, []);
+
+  const createSession = async () => {
+    // Step 2: create session payment by calling this function
+    session = await crPayment.session.create({
+      itemId: "1",
+      amount: "1",
+    });
+
+    // console.log("session", session);
+    return session;
+  };
+
+  
   const EmptyCart = () => {
     return (
       <div className="container">
@@ -40,12 +77,12 @@ const Checkout = () => {
     );
   };
   let totalAmount;
-  const handleRedirect = async () => {
+  const handleCreateSession = async () => {
     const session = await createSession();
-    // localStorage.setItem('session', JSON.stringify(session));
-    // window.postMessage({ type: "session_data", data: session }, process.env.REACT_APP_CHECKOUT_ENDPOINT);
-    // Redirect to the desired URL
-    const jsonData =state.map((item) => {
+    localStorage.setItem('session', JSON.stringify(session));
+    x=session.data.id
+
+    const jsonData = state.map((item) => {
       return {
         name: item.title,
         price: item.price,
@@ -53,7 +90,37 @@ const Checkout = () => {
         img: item.image,
       };
     });
-    window.location.href = `${process.env.REACT_APP_CHECKOUT_ENDPOINT}?session_id=${session.data.id}&json_data=${JSON.stringify(jsonData)}&shipping=10&total=${totalAmount}`; // Replace with your destination URL
+
+    const jsonObject = {
+      session_id: session.data.id,
+      json_data: JSON.stringify(jsonData),
+      shipping: 10,
+      total: Number(totalAmount.toFixed(2)),
+      merchant_address: session.data.merchantAddress,
+    };
+    console.log(jsonObject);
+    // Convert JSON object to URLSearchParams
+    function jsonToSearchParams(json) {
+      return Object.keys(json)
+        .map(
+          (key) => `${encodeURIComponent(key)}=${encodeURIComponent(json[key])}`
+        )
+        .join("&");
+    }
+
+    const queryParamsString = jsonToSearchParams(jsonObject);
+    console.log(queryParamsString);
+    const newTab = window.window.open(
+      `${process.env.REACT_APP_CHECKOUT_ENDPOINT}?${queryParamsString}`,
+      "_blank"
+    );
+    if (newTab) {
+      // New tab was successfully opened
+      newTab.focus();
+    } else {
+      // New tab was blocked by the browser's pop-up blocker
+      console.error("Checkout was blocked by the browser's pop-up blocker.");
+    }
   };
 
   const ShowCheckout = () => {
@@ -157,6 +224,18 @@ const Checkout = () => {
                         </div>
                       </div>
 
+                      <div className="col-12">
+                        <label for="address2" className="form-label">
+                          Number{" "}
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="address2"
+                          placeholder="Phone number"
+                        />
+                      </div>
+
                       <div className="col-12 my-1">
                         <label for="address" className="form-label">
                           Address
@@ -173,18 +252,7 @@ const Checkout = () => {
                         </div>
                       </div>
 
-                      <div className="col-12">
-                        <label for="address2" className="form-label">
-                          Address 2{" "}
-                          <span className="text-muted">(Optional)</span>
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="address2"
-                          placeholder="Apartment or suite"
-                        />
-                      </div>
+                      
 
                       <div className="col-md-5 my-1">
                         <label for="country" className="form-label">
@@ -309,9 +377,17 @@ const Checkout = () => {
                     <button
                       className="w-100 btn btn-primary "
                       type="submit"
-                      onClick={handleRedirect}
+                      onClick={()=>{}}
                     >
                       Continue to checkout
+                    </button>
+                    <hr className="my-3" />
+                    <button
+                      className="w-100 btn btn-success "
+                      type="submit"
+                      onClick={handleCreateSession}
+                    >
+                      Checkout with CrPayment - Pay with Crypto
                     </button>
                   </form>
                 </div>
