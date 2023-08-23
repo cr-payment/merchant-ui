@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function AlertDialog({text, title}) {
+export default function AlertDialog({text, title, handleRedirect}) {
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
@@ -31,7 +31,7 @@ export default function AlertDialog({text, title}) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Send receipt</Button>
+          <Button onClick={handleRedirect}>Send receipt</Button>
           <Button onClick={handleClose} autoFocus>
             OK
           </Button>

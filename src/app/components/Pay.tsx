@@ -88,7 +88,7 @@ const Pay = ({ billInfo }) => {
           handleClick={handleOpenConnectWallet}
         />
       )}
-      {openChooseToken && <>{openConnectWallet && <ConnectWallet />}</>}
+      {openChooseToken && <>{openConnectWallet && <ConnectWallet  />}</>}
     </div>
   );
 };

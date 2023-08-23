@@ -86,7 +86,7 @@ const ConnectWallet = () => {
       <Box flexGrow={15} mx={2} my={2}></Box>
 
       <Grid container spacing={40}>
-        <Grid item md={2}>
+        <Grid item md={1}>
           <Button
             sx={{
               height: 60,
@@ -96,12 +96,14 @@ const ConnectWallet = () => {
               borderRadius: '30px',
             }}
             onClick={() => write?.()}
+            disabled={isSuccess}
           >
-            <Typography variant="h6">PAY</Typography>
+            <Typography variant="h6">
+              {isConnected ? (isSuccess?'Paid':'Pay') : 'Choose wallet'}
+            </Typography>
           </Button>
         </Grid>
         <Grid item md={8}>
-          {/* {isConnected && <Typography variant="body1">Connected to {ensName ?? address}</Typography>} */}
           {isConnected && (
             <Typography variant="body1">
               Connected to {ensName ?? address}
@@ -111,8 +113,11 @@ const ConnectWallet = () => {
       </Grid>
       {isSuccess && (
         <AlertDialog
-          text={`Transaction successful ${JSON.stringify(data)}`}
+          text={`Transaction successful ${JSON.stringify(data)}\nCheck your order status at merchant site`}
           title="Payment successful notification"
+          handleRedirect={() => {
+            window.location.href = process.env.REACT_APP_MERCHANT_ENDPOINT!;
+          }}
         />
       )}
     </>
